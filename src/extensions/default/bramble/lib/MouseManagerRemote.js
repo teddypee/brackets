@@ -5,7 +5,7 @@
 
     var SCROLL_KEY = "___bramble-preview-scrollTop::" + window.___brambleFilename;
 
-    var listening = false;
+    var listening = true;
 
     function sendHighlightInfo(e) {
         var x = e.pageX - window.pageXOffset;
