@@ -1,6 +1,21 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, forin: true, maxerr: 50, regexp: true, bitwise: true */
 /* global addEventListener, removeEventListener, sessionStorage */
-(function(transport) {
+
+var testSessionStorage = "testSessionStorage";
+var noop = function() {};
+var sessionStorage = {
+  getItem: noop,
+  setItem: noop
+};
+
+try {
+  window.sessionStorage.setItem(testSessionStorage, testSessionStorage);
+  window.sessionStorage.removeItem(testSessionStorage);
+  sessionStorage = window.sessionStorage.bind(window);
+} catch(e) {
+  console.warn("[Bramble] Session storage not accessible for MouseManager.");
+
+    (function(transport) {
     "use strict";
 
     var SCROLL_KEY = "___bramble-preview-scrollTop::" + window.___brambleFilename;
