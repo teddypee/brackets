@@ -8,32 +8,39 @@ var sessionStorage = {
   setItem: noop
 };
 
-try {
+try 
+{
   window.sessionStorage.setItem(testSessionStorage, testSessionStorage);
   window.sessionStorage.removeItem(testSessionStorage);
   sessionStorage = window.sessionStorage.bind(window);
-} catch(e) {
+}
+
+catch(e) 
+{
   console.warn("[Bramble] Session storage not accessible for MouseManager.");
 
-    (function(transport) {
+    (function(transport)
+     {
     "use strict";
 
     var SCROLL_KEY = "___bramble-preview-scrollTop::" + window.___brambleFilename;
 
     var listening = false;
 
-    function sendHighlightInfo(e) {
+       function sendHighlightInfo(e) 
+       {
         var x = e.pageX - window.pageXOffset;
         var y = e.pageY - window.pageYOffset;
         var elem = document.elementFromPoint(x, y);
-        if(!elem) {
+        if(!elem)
+        {
             return;
         }
 
         var ds = elem.dataset;
         if(!(ds.brambleStartLine && ds.brambleStartCh && ds.brambleEndLine && ds.brambleEndCh)) {
             return;
-        }
+      }
 
         // If the element has a brackets-id, and this was a click,
         // use that info to highlight it. Don't bother for mousemove.
@@ -44,14 +51,17 @@ try {
 
         transport.send("bramble-highlight-lines:" + ds.brambleStartLine + "," +
             ds.brambleStartCh + "," + ds.brambleEndLine + "," + ds.brambleEndCh + bracketsId);
-    }
+   }
 
-    function shouldIgnoreElemEvent(e) {
+    function shouldIgnoreElemEvent(e) 
+      {
         // Ignore mouseout for any inner elements (just for entire window)
         var from = e.relatedTarget || e.toElement;
-        if(!from || from.nodeName === "HTML") {
+        if(!from || from.nodeName === "HTML")
+        {
             // Further filter things by only responding to events close to the left/top
-            if(e.clientX <= 32 || e.clientY <= 32) {
+            if(e.clientX <= 32 || e.clientY <= 32)
+            {
                 return false;
             }
         }
@@ -59,8 +69,10 @@ try {
         return true;
     }
 
-    function startListener() {
-        if(listening) {
+    function startListener()
+      {
+        if(listening)
+        {
             return;
         }
 
@@ -68,8 +80,11 @@ try {
         listening = true;
     }
 
-    function stopListener() {
-        if(!listening) {
+    
+      function stopListener()
+      {
+        if(!listening) 
+        {
             return;
         }
 
@@ -77,7 +92,8 @@ try {
         listening = false;
     }
 
-    addEventListener("load", function() {
+    addEventListener("load", function() 
+      {
         // Restore last scroll position for this session (if any)
         document.body.scrollTop = sessionStorage.getItem(SCROLL_KEY)|0;
 
@@ -85,19 +101,22 @@ try {
         // if there is no livedoc
         if(!transport) {
             return;
-        }
+       }
 
         startListener();
 
         // If the user clicks on an element, stop inspecting with mousemove (pin editor)
-        addEventListener("click", function(e) {
+        addEventListener("click", function(e)
+        {
             transport.send("bramble-inspector-disable");
             stopListener();
             sendHighlightInfo(e);
         });
 
-        addEventListener("mouseout", function(e) {
-            if(!shouldIgnoreElemEvent(e)) {
+        addEventListener("mouseout", function(e)
+        {
+            if(!shouldIgnoreElemEvent(e))
+            {
                 // Start listening for user inspecting elements (again)
                 startListener();
                 return false;
@@ -105,7 +124,8 @@ try {
         });
 
         // Remember last scroll position for this document
-        addEventListener("scroll", function() {
+        addEventListener("scroll", function()
+        {
             sessionStorage.setItem(SCROLL_KEY, document.body.scrollTop);
         }, false);
 
